@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page title</title>
+    <link href="play.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+     <div id="container">
+      
+   <center> <pre><h3>MUSIC PLAYER</h3> </pre></center> 
+     <img  id="image" alt="sorry 😔" >
+ <pre> <center> <p class="title">title.mp3</p></center></pre>
+   <center>  <p class="artist">artists</p></center>
+     <input  onchange="touch()"  class="slider" type="range" min="0"  value="0" max="100"></br>
+     <div id="btn">
+     <button class="preSong"><i class="fa fa-step-backward"></button></i>
+     
+     <button  class="play" ><i class="fa fa-play"></i></button> 
+     
+     <button class="nextSong"> <i class="fa fa-step-forward"></i></button> 
+     </div>
+    </div>
+</body>
+<script>
+    
+    let timer;
+    
+    let play = document.querySelector(".play");
+   
+   let preSong = document.querySelector(".preSong");
+   
+   
+   let nextSong = document.querySelector(".nextSong");
+    
+    let title = document.querySelector(".title");
+    
+    let slider = document.querySelector('.slider');
+    
+    let img = document.querySelector("#image");
+    
+    let artist = document.querySelector(".artist");
+    
+    
+    let playing_song = false;
+    
+    let index_no = 0;
+    
+    let auto_play = 0;
+    
+    let track = document.createElement('audio');
+    
+    allSong = [
+    {
+        name:"first song",
+        path:"Song1.mp3",
+        src:"img1.JPG",
+        artist:"santhosh"
+        
+    },
+    
+     { 
+     name: "Night Owl", 
+     artist: "Broke For Free", 
+     src: "https://images.pexels.com/photos/2264753/pexels-photo-2264753.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250&w=250", 
+     path: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3" 
+   }, 
+   
+   { 
+     name: "Enthusiast", 
+     artist: "Tours", 
+     src: "https://images.pexels.com/photos/3100835/pexels-photo-3100835.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250&w=250", 
+     path: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3" 
+   }, 
+    
+    {
+        name:"second song",
+        path:"Song2.mp3",
+        src:"img2.png",
+        artist:"sandy"
+        
+    },
+    
+    {
+        name:"third song",
+        path:"Song3.mp3",
+        src:"img3.jpg",
+        artist:"sam sangu"
+        
+    },
+    
+     {
+        name:"fourth song",
+        path:"Song1.mp3",
+        src:"img1.JPG",
+        artist:"santhosh"
+        
+    },
+    
+    {
+        name:"fiveth song",
+        path:"Song2.mp3",
+        src:"img2.png",
+        artist:"sandy"
+        
+    }
+    
+    ];
+    
+    const loadTrack=(index_no)=>{
+    
+    
+        clearInterval(timer);
+        
+         
+         
+         track.src = allSong[index_no].path;
+         img.src = allSong[index_no].src;
+         title.innerHTML = allSong[index_no].name;
+         artist.innerHTML = allSong[index_no].artist;
+         
+            
+    }
+    loadTrack(index_no);
+    
+ 
+    
+  const playSongs=()=>{
+      if(playing_song === false){
+         playSong();
+       
+         resetSlider();
+           
+     timer = setInterval(move ,1000);
+      
+
+         
+      }
+      
+      else{
+          pauseSong();
+          timer = setInterval(move ,1000);
+      }
+  };
+   
+   
+    const  resetSlider = () =>{
+        slider.value = 0;
+    }
+ 
+    
+   const  playSong=()=>{
+   
+       track.play();
+       play.innerHTML = '<i class="fa fa-pause"></i>';
+       
+       playing_song = true;
+       
+       
+   };
+   
+   const pauseSong=()=>{
+       track.pause();
+       play.innerHTML =  '<i class="fa fa-play"></i>';
+       playing_song = false;
+   };
+   
+   
+   const preSongs=()=>{
+      if(index_no > 0){
+      index_no -= 1;
+      loadTrack(index_no);
+      playSong();
+      resetSlider();
+      timer = setInterval(move ,1000);
+     } 
+     
+     else{
+         index_no = allSong.length-1;
+         loadTrack(index_no);
+         playSong();
+         resetSlider();
+         timer = setInterval(move ,1000);
+         
+     }
+   };
+   
+   const nextSongs=()=>{
+   if(index_no <= allSong.length){
+      index_no  +=1;
+      loadTrack(index_no);
+      playSong();
+      resetSlider();
+      timer = setInterval(move ,1000);
+     } 
+     
+     else{
+         index_no = 0;
+         loadTrack(index_no);
+         playSong();
+         resetSlider();
+         timer = setInterval(move ,1000);
+         
+     }
+     
+     };
+     
+   const  touch=()=>{
+   
+         sliders = track.duration * ( slider.value /100);
+        track.currentTime  = sliders;
+        result = track.currentTime;
+        return result;
+     };
+     
+     const move=()=>{
+     
+     let position = 0;
+         
+         if(!isNaN(track.duration)){
+         position=  track.currentTime *       (  100 / track.duration);
+        slider.value  = position;
+        
+        }
+        
+     };
+     
+
+   
+ track.addEventListener('ended' , nextSongs);
+   
+   play.addEventListener('click' ,playSongs);
+   
+   preSong.addEventListener('click' ,preSongs);
+   
+   nextSong.addEventListener('click', nextSongs);
+   
+   //  slider.addEventListener('click' ,touch)
+   
+ //  width="150px" height="200px"
+ 
+</script>
+</html>
